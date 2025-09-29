@@ -16,7 +16,6 @@ Chatbot Development: Design and develop an AI-powered chatbot capable of providi
 **A.** Utilize Flask, a web framework for Python, to develop the backend infrastructure of the chatbot.
 **B.** Integrate the WhatsApp or Telegram API to enable seamless message communication between users and the chatbot.
 **C.** Implement sentiment analysis API to extract emotional insights from conversations, enabling the chatbot to provide empathetic and personalized support.
-**D.** Utilize Twilio API or a similar solution for sending SMS or phone notifications to support staff in high-risk situations.
 
 ### Main Features:
 
@@ -24,11 +23,5 @@ Chatbot Development: Design and develop an AI-powered chatbot capable of providi
 -   **B.** AUDEXA will be able to answer in multiple languages.
 -   **C.** AUDEXA will be able to provide voice assistance via speech recognition.
 -   **D.** AUDEXA will be able to detect the user's emotions via sentiment analysis and provide personalized support.
--   **E.** AUDEXA will be able to provide emergency contacts and support staff in high-risk situations.
--   **F.** Users will be able to access AUDEXA via WhatsApp.
+-   **E.** Users will be able to access AUDEXA via Telegram.
 
-
-### Future Scope:
-
--   **A.** AUDEXA will be able to provide set up reminders for users and maintain a timeline of their activities.
--   **B.** AUDEXA will be able to speak to users.
