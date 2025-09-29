@@ -15,10 +15,6 @@ To run ListenAI properly, you need to set up the following API keys:
 - Sign up for an account
 - Get your API key from the dashboard
 
-### 3. Twilio API Keys (Optional - for WhatsApp integration)
-- Go to [Twilio Console](https://console.twilio.com/)
-- Sign up for an account
-- Get your Account SID and Auth Token
 
 ## Setup Steps
 
@@ -36,11 +32,6 @@ GEMINI_KEY=your_actual_gemini_api_key_here
 
 # Cohere API Key (Optional)
 COHERE_API_KEY=your_cohere_api_key_here
-
-# Twilio Configuration (Optional)
-TWILIO_ACCOUNT_SID=your_twilio_account_sid_here
-TWILIO_AUTH_TOKEN=your_twilio_auth_token_here
-```
 
 ### Step 2: Replace placeholder values
 - Replace `your_actual_gemini_api_key_here` with your real Gemini API key
