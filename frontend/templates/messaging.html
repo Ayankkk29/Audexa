@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUDEXA Direct Messaging - Telegram Only</title>
+    <link href="{{ url_for('api.static', filename='images/favicon.ico') }}" rel="icon" />
+    <link href="{{ url_for('api.static', filename='styles/main.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styles for the messaging page */
+        body {
+            background: linear-gradient(90deg, rgba(12, 3, 33, 1) 0%, rgba(44, 29, 98, 1) 48%, rgba(12, 3, 33, 1) 100%);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .messaging-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+        }
+        .messaging-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .messaging-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0;
+            margin-top: 0;
+            background: linear-gradient(90deg, #a073ee, #6e25ed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        .audexa-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            margin-top: -0.3rem;
+            background: linear-gradient(90deg, #a073ee, #6e25ed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(160, 115, 238, 0.4);
+            line-height: 0.9;
+            letter-spacing: 2px;
+        }
+        .messaging-header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .telegram-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+        .telegram-section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .telegram-section label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: left;
+        }
+        .telegram-section input[type="text"],
+        .telegram-section textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        .telegram-section input[type="text"]:focus,
+        .telegram-section textarea:focus {
+            border-color: #0088cc;
+            outline: none;
+        }
+        .telegram-section button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.8rem;
+            border-radius: 10px;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            background: linear-gradient(135deg, #0088cc, #005f99);
+        }
+        .telegram-section button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .status-message {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            display: none;
+        }
+        .status-message.success {
+            background-color: rgba(0, 136, 204, 0.2);
+            color: #0088cc;
+        }
+        .status-message.error {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+        }
+        .loading-spinner {
+            display: none;
+            margin-left: 10px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .info-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #0088cc;
+        }
+        .info-box h3 {
+            color: #0088cc;
+            margin-bottom: 0.5rem;
+        }
+        .info-box p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+        @media (max-width: 768px) {
+            .messaging-container {
+                padding: 1.5rem;
+            }
+            .messaging-header h1 {
+                font-size: 1.8rem;
+            }
+            .audexa-title {
+                font-size: 3rem;
+                letter-spacing: 1px;
+            }
+            .telegram-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="messaging-container">
+        <div class="messaging-header">
+            <h1>Direct Messaging with</h1>
+            <h1 class="audexa-title">AUDEXA</h1>
+            <p>Connect with AUDEXA instantly via Telegram.</p>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fab fa-telegram-plane"></i> Telegram Integration</h3>
+            <p>Send messages directly to AUDEXA through Telegram. The bot will respond with AI-powered assistance for mental health support, career guidance, and more.</p>
+        </div>
+
+        <div class="telegram-section">
+            <h2><i class="fab fa-telegram-plane"></i> Send Telegram Message</h2>
+            <form id="telegramForm">
+                <label for="telegramChatId">Recipient Chat ID or Username (e.g., @username or 123456789)</label>
+                <input type="text" id="telegramChatId" placeholder="Enter recipient's Telegram Chat ID or Username" required>
+                <label for="telegramMessage">Message</label>
+                <textarea id="telegramMessage" rows="4" placeholder="Type your message for AUDEXA" required></textarea>
+                <button type="submit">
+                    Send Telegram Message <i class="fas fa-paper-plane" style="margin-left: 0.5rem;"></i>
+                    <i class="fas fa-spinner fa-spin loading-spinner" id="telegramLoading"></i>
+                </button>
+                <div id="telegramStatus" class="status-message"></div>
+            </form>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fas fa-info-circle"></i> How to Use</h3>
+            <p>1. Enter a Telegram Chat ID or username (e.g., @username)<br>
+            2. Type your message<br>
+            3. Click "Send Telegram Message"<br>
+            4. AUDEXA will respond with AI-powered assistance</p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for handling form submissions and API calls
+        async function sendMessage(platform, to, message) {
+            const loadingSpinner = document.getElementById(`${platform}Loading`);
+            const statusDiv = document.getElementById(`${platform}Status`);
+
+            loadingSpinner.style.display = 'inline-block';
+            statusDiv.style.display = 'none';
+            statusDiv.className = 'status-message';
+
+            try {
+                const response = await fetch(`/send_telegram`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: to,
+                        message: message
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusDiv.textContent = `Success: ${data.message}`;
+                    statusDiv.classList.add('success');
+                } else {
+                    statusDiv.textContent = `Error: ${data.error || data.message}`;
+                    statusDiv.classList.add('error');
+                }
+            } catch (error) {
+                statusDiv.textContent = `Network error: ${error.message}`;
+                statusDiv.classList.add('error');
+            } finally {
+                loadingSpinner.style.display = 'none';
+                statusDiv.style.display = 'block';
+            }
+        }
+
+        document.getElementById('telegramForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const chatId = document.getElementById('telegramChatId').value;
+            const message = document.getElementById('telegramMessage').value;
+            sendMessage('telegram', chatId, message);
+        });
+    </script>
+</body>
+</html>

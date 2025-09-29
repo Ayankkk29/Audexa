@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>AUDEXA</title>
+        <link href="{{ url_for('api.static', filename='images/favicon.ico') }}" rel="icon" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link
+            rel="stylesheet"
+            href="{{url_for('api.static', filename='styles/style.css')}}"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 
+    </head>
+    
+    <!-- Add header here -->
+    <header class="chat-header">
+        <div class="header-content">
+            <a href="/" class="logo-link">
+                <img src="{{url_for('api.static', filename='images/logo1.svg.png')}}" alt="AUDEXA Logo" class="logo1">
+            </a>
+            <div class="header-title">
+                <span class="header-subtitle">AI Mental Health & Career Assistant</span>
+            </div>
+        </div>
+    </header>
+    <style>
+    /* Add styling for the header */
+.chat-header {
+    padding: 8px 20px;
+    background: rgba(159, 159, 207, 0.85);
+    color: white;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo1 {
+    width: 120px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.logo1:hover {
+    transform: scale(1.05);
+}
+
+.header-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.header-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        gap: 10px;
+    }
+    .logo1 {
+        width: 100px;
+    }
+    .header-subtitle {
+        font-size: 0.8rem;
+    }
+}
+    </style>
+
+    <body 
+    style="
+      background: rgb(12, 3, 33);
+      background: linear-gradient(
+        90deg,
+        rgba(12, 3, 33, 1) 0%,
+        rgba(44, 29, 98, 1) 48%,
+        rgba(12, 3, 33, 1) 100%
+      );">
+
+      <section style="    display: flex;
+      flex-flow: column wrap;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 70%;
+      margin: 90px 10px 25px 10px;
+      height: calc(100% - 115px);
+      border: var(--border);
+      border-radius: 5px;
+      background: var(--msger-bg);
+      box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+      height: 600px;
+  ">
+        
+        <section class="msger">
+            <main class="msger-chat">
+                <div class="msg left-msg">
+                    <div class="msg-img">
+                        <img
+                            src="{{url_for('api.static', filename='images/bot.png')}}"
+                            width="50px"
+                            heigth="50px"
+                        />
+                    </div>
+
+                    <div class="msg-bubble">
+                        <div class="msg-info">
+                            <div class="msg-info-name">Audexa</div>
+                            <div class="msg-info-time">{{timestamp}}</div>
+                        </div>
+
+                        <div class="msg-text">
+                            {{ welcome_message }}
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <form class="msger-inputarea">
+                <!-- Add this drop-down menu before the input field -->
+                <div class="model-selection">
+                    <select id="modelSelect" class="modelSelect" style="background: linear-gradient(180deg, #a073ee -11.11%, #6e25ed 100%)">
+                        <option value="gemini">Gemini</option>
+                    </select>
+                </div>
+
+                <!-- Add language selection dropdown -->
+                <select id="langSelect" aria-label="Language" style="padding:6px 10px; border-radius:12px; border:1px solid #ccc; background:#fff; font-size:0.95em; margin-left:8px;">
+                    <option value="auto" selected>🌐 Auto Detect</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+                    <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+                    <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+                    <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+                    <option value="mr">🇮🇳 मराठी (Marathi)</option>
+                    <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+                    <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+                    <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+                    <option value="ml">🇮🇳 മലയാളം (Malayalam)</option>
+                    <option value="ur">🇮🇳 اردو (Urdu)</option>
+                    <option value="es">🇪🇸 Español (Spanish)</option>
+                    <option value="fr">🇫🇷 Français (French)</option>
+                    <option value="de">🇩🇪 Deutsch (German)</option>
+                    <option value="it">🇮🇹 Italiano (Italian)</option>
+                    <option value="pt">🇵🇹 Português (Portuguese)</option>
+                    <option value="ru">🇷🇺 Русский (Russian)</option>
+                    <option value="ja">🇯🇵 日本語 (Japanese)</option>
+                    <option value="ko">🇰🇷 한국어 (Korean)</option>
+                    <option value="zh">🇨🇳 中文 (Chinese)</option>
+                </select>
+
+                <input
+                    type="text"
+                    class="msger-input"
+                    id="textInput"
+                    placeholder="Enter your message..."
+                />
+                <button type="submit" class="msger-send-btn" style="background: linear-gradient(180deg, #a073ee -11.11%, #6e25ed 100%); ">Send</button>
+                <div class="record" style="color: white; padding-top: 10px;" title="Click to record voice message">
+                    <i class="fa-solid fa-microphone fa-xl" ></i>
+                </div>
+                <div class="voice-response" style="color: white; padding-top: 10px; margin-left: 10px;" title="Click to hear response" onclick="toggleSpeech()">
+                    <i id="speechIcon" class="fa-solid fa-volume-high fa-xl"></i>
+                </div>
+                <div hidden="hidden" class="loading">
+                    <i class="fa-solid fa-spinner fa-spin fa-xl"></i>
+                </div>
+                <div hidden="hidden" class="loading-send" >
+                    <i class="fa-solid fa-spinner fa-spin fa-xl"></i>
+                </div>
+            </form>
+        </section>
+
+    </section>
+        <!-- partial -->
+        <script src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
+        <script
+            src="https://kit.fontawesome.com/384afa54f9.js"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            const loading_send = document.querySelector('.loading-send')
+            const msgerForm = get('.msger-inputarea')
+            const msgerInput = get('.msger-input')
+            const msgerChat = get('.msger-chat')
+            const voice_colors = ['black', 'red']
+            let index = 1
+            localStorage.questions = ''
+            localStorage.answers = ''
+
+            // Icons made by Freepik from www.flaticon.com
+            const BOT_IMG = '../static/bot.png'
+            const PERSON_IMG =
+                'https://image.flaticon.com/icons/svg/145/145867.svg'
+            const BOT_NAME = 'AUDEXA'
+            const PERSON_NAME = 'You'
+
+            msgerForm.addEventListener('submit', (event) => {
+                loading_send.removeAttribute('hidden')
+                event.preventDefault()
+
+                const msgText = msgerInput.value
+                if (!msgText) return
+
+                // Stop any current speech when sending a new message
+                stopSpeech()
+
+                localStorage.questions =
+                    localStorage.questions + msgText + ' | '
+                appendMessage(PERSON_NAME, PERSON_IMG, 'right', msgText)
+                msgerInput.value = ''
+                botResponse(msgText)
+            })
+
+            function appendMessage(name, img, side, text) {
+                //   Simple solution for small apps
+                var msgHTML = ''
+                if (side == 'left') {
+                    msgHTML = `
+<div class="msg ${side}-msg">
+  <div class="msg-img""><img src="{{url_for('api.static', filename='images/bot.png')}}" width="50px" heigth="50px"></div>
+
+  <div class="msg-bubble">
+    <div class="msg-info">
+      <div class="msg-info-name">${name}</div>
+      <div class="msg-info-time">${formatDate(new Date())}</div>
+    </div>
+
+    <div class="msg-text">${text}</div>
+  </div>
+</div>
+`
+                } else {
+                    msgHTML = `
+<div class="msg ${side}-msg">
+  <div class="msg-img""><img src="{{url_for('api.static', filename='images/you.png')}}" width="50px" heigth="50px"></div>
+
+  <div class="msg-bubble">
+    <div class="msg-info">
+      <div class="msg-info-name">${name}</div>
+      <div class="msg-info-time">${formatDate(new Date())}</div>
+    </div>
+
+    <div class="msg-text">${text}</div>
+  </div>
+</div>
+`
+                }
+
+                msgerChat.insertAdjacentHTML('beforeend', msgHTML)
+                msgerChat.scrollTop += 500
+            }
+
+            // Multilingual: update indicator and send language to backend
+            const langSelect = document.getElementById('langSelect');
+            const langIndicator = document.getElementById('langIndicator');
+            langSelect.addEventListener('change', function() {
+                const selectedOption = langSelect.options[langSelect.selectedIndex];
+                langIndicator.textContent = selectedOption.text;
+            });
+
+            function botResponse(rawText) {
+                console.log('sending message to model ...')
+                // Always use Gemini model
+                const selectedModel = 'gemini';
+                console.log('Model Selected: ' + selectedModel);
+                // Bot Response
+                $.get('/home/api/response', {
+                    model: selectedModel, // Send Gemini as the model to the server
+                    msg: rawText,
+                    questions: localStorage.questions,
+                    answers: localStorage.answers,
+                    language: langSelect.value
+                }).done(function (data) {
+                    const msgText = data.answer;
+                    const popupMessage = data.popup_message; // Get the popup message
+                    appendMessage(BOT_NAME, BOT_IMG, 'left', msgText)
+                    
+                    // Store the response text for voice playback
+                    window.lastBotResponse = msgText;
+                    
+                    // Display the popup message
+                    alert(popupMessage);
+
+                    localStorage.answers = localStorage.answers + data + ' | '
+                    loading_send.setAttribute('hidden', 'hidden')
+                    console.log('answer from Gemini received')
+                })
+            }
+
+            // Utils
+            function get(selector, root = document) {
+                return root.querySelector(selector)
+            }
+
+            function formatDate(date) {
+                const h = '0' + date.getHours()
+                const m = '0' + date.getMinutes()
+
+                return `${h.slice(-2)}:${m.slice(-2)}`
+            }
+        </script>
+        <script>
+            const record = document.querySelector('.record')
+            const loading = document.querySelector('.loading')
+            const voiceResponse = document.querySelector('.voice-response')
+
+            // Global variables for speech control
+            let currentAudio = null;
+            let currentUtterance = null;
+            let isPlaying = false;
+
+            // Voice Response functionality with pause/continue
+            function toggleSpeech() {
+                if (!window.lastBotResponse) {
+                    alert('No response to play. Please send a message first.');
+                    return;
+                }
+
+                if (isPlaying) {
+                    // Pause current speech
+                    pauseSpeech();
+                } else {
+                    // Start or resume speech
+                    startSpeech();
+                }
+            }
+
+            function startSpeech() {
+                if (currentAudio && !currentAudio.paused) {
+                    // Resume audio playback
+                    currentAudio.play();
+                    updateSpeechIcon(true);
+                    isPlaying = true;
+                    return;
+                }
+
+                if (currentUtterance && speechSynthesis.speaking) {
+                    // Resume speech synthesis
+                    speechSynthesis.resume();
+                    updateSpeechIcon(true);
+                    isPlaying = true;
+                    return;
+                }
+
+                // Try server TTS first
+                fetch('/home/api/text_to_speech', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: window.lastBotResponse,
+                        language: langSelect.value
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    } else {
+                        throw new Error('Server TTS failed');
+                    }
+                })
+                .then(blob => {
+                    currentAudio = new Audio();
+                    currentAudio.src = URL.createObjectURL(blob);
+                    currentAudio.onended = function() {
+                        updateSpeechIcon(false);
+                        isPlaying = false;
+                    };
+                    currentAudio.onpause = function() {
+                        updateSpeechIcon(false);
+                        isPlaying = false;
+                    };
+                    currentAudio.play();
+                    updateSpeechIcon(true);
+                    isPlaying = true;
+                })
+                .catch(error => {
+                    console.log('Server TTS failed, using browser TTS:', error);
+                    // Fallback to browser TTS
+                    if ('speechSynthesis' in window) {
+                        currentUtterance = new SpeechSynthesisUtterance(window.lastBotResponse);
+                        currentUtterance.lang = langSelect.value;
+                        currentUtterance.rate = 0.9;
+                        currentUtterance.pitch = 1;
+                        currentUtterance.onend = function() {
+                            updateSpeechIcon(false);
+                            isPlaying = false;
+                        };
+                        currentUtterance.onpause = function() {
+                            updateSpeechIcon(false);
+                            isPlaying = false;
+                        };
+                        speechSynthesis.speak(currentUtterance);
+                        updateSpeechIcon(true);
+                        isPlaying = true;
+                    } else {
+                        alert('Text-to-speech not supported in this browser');
+                    }
+                });
+            }
+
+            function pauseSpeech() {
+                if (currentAudio && !currentAudio.paused) {
+                    currentAudio.pause();
+                    updateSpeechIcon(false);
+                    isPlaying = false;
+                } else if (speechSynthesis.speaking) {
+                    speechSynthesis.pause();
+                    updateSpeechIcon(false);
+                    isPlaying = false;
+                }
+            }
+
+            function updateSpeechIcon(playing) {
+                const speechIcon = document.getElementById('speechIcon');
+                if (playing) {
+                    speechIcon.className = 'fa-solid fa-pause fa-xl';
+                    speechIcon.parentElement.title = 'Click to pause speech';
+                } else {
+                    speechIcon.className = 'fa-solid fa-volume-high fa-xl';
+                    speechIcon.parentElement.title = 'Click to hear response';
+                }
+            }
+
+            function stopSpeech() {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                }
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                updateSpeechIcon(false);
+                isPlaying = false;
+            }
+
+            // Initialize voice response button
+            voiceResponse.onclick = toggleSpeech;
+
+            if (navigator.mediaDevices.getUserMedia) {
+                console.log('getUserMedia supported')
+                const constraints = { 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                }
+                let chunks = []
+
+                let onSuccess = function (stream) {
+                    const mediaRecorder = new MediaRecorder(stream, {
+                        mimeType: 'audio/webm;codecs=opus'
+                    })
+
+                    record.onclick = function () {
+                        if (mediaRecorder.state == 'recording') {
+                            mediaRecorder.stop()
+                            console.log('stopped recording')
+                            record.style.background = ''
+                            record.style.color = ''
+                            record.disabled = true
+                            loading.removeAttribute('hidden')
+                        } else {
+                            console.log('recording ...')
+                            // Stop any current speech when starting to record
+                            stopSpeech()
+                            mediaRecorder.start()
+                            record.style.color = 'red'
+                            record.style.background = 'rgba(255, 0, 0, 0.2)'
+                        }
+                    }
+
+                    mediaRecorder.onstop = function (e) {
+                        const blob = new Blob(chunks, { type: 'audio/webm' })
+                        const myFile = new File([blob], 'audio.webm', {
+                            type: blob.type,
+                        })
+
+                        var xhr = new XMLHttpRequest()
+                        xhr.onload = function (e) {
+                            if (this.readyState === 4) {
+                                const transcribedText = e.target.responseText;
+                                if (transcribedText && !transcribedText.includes('error') && !transcribedText.includes('failed')) {
+                                    document.getElementById('textInput').value = transcribedText;
+                                    // Auto-send the transcribed message
+                                    if (transcribedText.trim()) {
+                                        const msgText = transcribedText.trim();
+                                        localStorage.questions = localStorage.questions + msgText + ' | ';
+                                        appendMessage(PERSON_NAME, PERSON_IMG, 'right', msgText);
+                                        botResponse(msgText);
+                                    }
+                                } else {
+                                    alert('Transcription failed: ' + transcribedText);
+                                }
+                                record.disabled = false
+                                console.log('received transcript recording')
+                                loading.setAttribute('hidden', 'hidden')
+                            }
+                        }
+                        var fd = new FormData()
+                        fd.append('audio_data', blob, 'audio.webm')
+                        fd.append('language', langSelect.value)
+                        console.log('sending recording to Whisper ...')
+                        xhr.open('POST', '/home/api/voice', true)
+                        xhr.send(fd)
+                        chunks = []
+                    }
+
+                    mediaRecorder.ondataavailable = function (e) {
+                        chunks.push(e.data)
+                    }
+                }
+
+                let onError = function (err) {
+                    console.log('The following error occurred: ' + err)
+                    alert('Microphone access denied. Please allow microphone access to use voice features.');
+                }
+                navigator.mediaDevices
+                    .getUserMedia(constraints)
+                    .then(onSuccess, onError)
+            } else {
+                console.log('getUserMedia not supported on your browser!')
+                alert('Voice recording not supported in this browser. Please use text input.');
+            }
+        </script>
+
+    </body>
+</html>
