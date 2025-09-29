@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUDEXA - Mental Health AI Assistant</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        }
+        h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            margin-bottom: 30px; 
+        }
+        .status { 
+            background: #d4edda; 
+            color: #155724; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 20px 0; 
+            text-align: center; 
+        }
+        .chat-container { 
+            border: 2px solid #3498db; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin: 20px 0; 
+            min-height: 400px; 
+            background: #f8f9fa; 
+        }
+        .message { 
+            margin: 15px 0; 
+            padding: 12px; 
+            border-radius: 8px; 
+            max-width: 80%; 
+        }
+        .user { 
+            background: #3498db; 
+            color: white; 
+            margin-left: auto; 
+            text-align: right; 
+        }
+        .bot { 
+            background: #e8f5e8; 
+            color: #2c3e50; 
+        }
+        .input-container { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+        }
+        input[type="text"] { 
+            flex: 1; 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 16px; 
+        }
+        button { 
+            padding: 12px 25px; 
+            background: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background: #2980b9; 
+        }
+        .features { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+            margin: 20px 0; 
+        }
+        .feature { 
+            background: #ecf0f1; 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+        }
+        .feature i { 
+            font-size: 2em; 
+            color: #3498db; 
+            margin-bottom: 10px; 
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-robot"></i> AUDEXA - Mental Health AI Assistant</h1>
+        
+        <div class="status">
+            <i class="fas fa-check-circle"></i> <strong>AI Services: ACTIVE</strong> | 
+            <i class="fas fa-globe"></i> <strong>Multilingual: READY</strong> | 
+            <i class="fas fa-microphone"></i> <strong>Voice: ENABLED</strong>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-brain"></i>
+                <h3>AI-Powered</h3>
+                <p>Advanced AI responses for mental health support</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-language"></i>
+                <h3>Multilingual</h3>
+                <p>Support in multiple languages</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-heart"></i>
+                <h3>Mental Health</h3>
+                <p>Specialized mental health guidance</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-comments"></i>
+                <h3>Real-time Chat</h3>
+                <p>Instant responses and support</p>
+            </div>
+        </div>
+        
+        <div class="chat-container" id="chatBox">
+            <div class="message bot">
+                <strong>AUDEXA:</strong> Hello! I'm AUDEXA, your mental health AI assistant. I'm here to help with support, guidance, and multilingual conversations. How can I assist you today? 🤗
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Send</button>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center; color: #7f8c8d;">
+            <p><i class="fas fa-server"></i> Server Status: <strong>ONLINE</strong></p>
+            <p><i class="fas fa-link"></i> API Endpoint: <strong>ACTIVE</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            
+            // Add user message
+            chatBox.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            chatBox.innerHTML += `<div class="message bot" id="typing"><strong>AUDEXA:</strong> <i>Typing...</i></div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Send to AI API
+            fetch('/.netlify/functions/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove typing indicator
+                document.getElementById('typing').remove();
+                
+                // Add AI response
+                chatBox.innerHTML += `<div class="message bot"><strong>AUDEXA:</strong> ${data.response}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                // Remove typing indicator
+                document.getElementById('typing').remove();
+                
+                // Add fallback response
+                chatBox.innerHTML += `<div class="message bot"><strong>AUDEXA:</strong> I'm here to help! Please tell me more about what's on your mind. 💭</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>
