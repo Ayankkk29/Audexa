@@ -401,21 +401,7 @@ This project is licensed under the **MIT License**.
 
 ---
 
-# 👨‍💻 Developer
 
-### **Vandan Patel**
-
-**B.Tech Artificial Intelligence & Machine Learning**
-
-VIT Bhopal University
-
-GitHub: https://github.com/yourusername
-
-LinkedIn: https://linkedin.com/in/yourprofile
-
-Email: your@email.com
-
----
 
 <div align="center">
 
